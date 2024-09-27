@@ -137,17 +137,14 @@ cv::Mat extract_edges(const cv::Mat& grayscale_image, const int& canny_thresh){
 
 // Function that performs morphological opening and dilation to distinguish possible datamatrixes from the background
 cv::Mat perform_morphology_and_component_filtering(cv::Mat edges){
-    // cv::adaptiveThreshold(elem.first, bin, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 9, 0);
     cv::Mat opelem = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(7,7)), //3
             dilelem = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(9,9)); //4
     cv::morphologyEx(edges, edges, cv::MORPH_DILATE, dilelem);
     cv::morphologyEx(edges, edges, cv::MORPH_OPEN, opelem);
-    //cv::imwrite(output_folder.string() + "processed_" + elem.second, dst);
     
     cv::Mat components, stats, centroids;
     cv::connectedComponentsWithStats(edges, components, stats, centroids, 8);
     cv::Mat filtered = remove_small_components(components, stats);
-    //cv::imwrite(output_folder.string() + "filtered" + elem.second, filtered);
 
     return filtered;
 
@@ -374,39 +371,14 @@ std::vector<cv::Point> detect_dashed_border(const cv::Vec4f& first_line, const c
             timing_pattern_points2.push_back(point);
         }
     }
-    
-
-    // std::cout << "pattern1: ";
-    // for(int i = 1; i < timingPatternPoints1.size(); i++){
-    //     std::cout  << distance(timingPatternPoints1[i],timingPatternPoints1[i-1]) << " ";
-    // }
-    // std::cout << "\n" << "pattern2: ";
-    // for(int i = 1; i < timingPatternPoints2.size(); i++){
-    //     std::cout  << distance(timingPatternPoints2[i],timingPatternPoints2[i-1]) << " ";
-    // }
-    // std::cout << "\n\n\n";
-
-    
 
     if(dashed_border_is_valid(timing_pattern_points1, timing_pattern_points2)){
 
-        // cv::Mat disp = edges.clone();
-        // disp.convertTo(disp, CV_8UC1);
-        // cv::cvtColor(disp, disp, cv::COLOR_GRAY2BGR);
 
         int finder_pattern_size = std::max(timing_pattern_points1.size(), timing_pattern_points2.size());
         std::vector<cv::Point> ordered_vertices = order_vertices_counterclockwise({intersection, vertex1, vertex2, vertex_diagonal});
         std::vector<cv::Point> possible_detection = {ordered_vertices};
 
-        
-        // cv::circle(disp, intersection, 1, cv::Scalar(0, 0, 255), -1);
-        // cv::circle(disp, vertex1, 1, cv::Scalar(0, 0, 255), -1);
-        // cv::circle(disp, vertex2, 1, cv::Scalar(0, 0, 255), -1);
-        // cv::circle(disp, vertex_diagonal, 1, cv::Scalar(0, 0, 255), -1);
-        // draw_points(disp, timing_pattern_points1, cv::Scalar(0, 0, 255));
-        // draw_points(disp, timing_pattern_points2, cv::Scalar(0, 0, 255));
-        // cv::imshow("pattern", disp);
-        // cv::waitKey(0);
 
         return possible_detection;
 
@@ -725,8 +697,8 @@ int main(int argc, char* argv[]) {
 
     if(operation_type == "det"){
 
-        fs::path input_folder = parser.get<cv::String>("@input"); //"../prj.cw/img_dataset/";
-        fs::path output_folder = parser.get<cv::String>("@output"); //"../prj.cw/detections/";
+        fs::path input_folder = parser.get<cv::String>("@input"); 
+        fs::path output_folder = parser.get<cv::String>("@output"); 
 
         if (!fs::exists(input_folder)) {
             throw std::invalid_argument("Could not find specified input directory!");
@@ -832,11 +804,6 @@ int main(int argc, char* argv[]) {
                         first_line = extend_line_to_a_point(first_line, intersection);
                         second_line = extend_line_to_a_point(second_line, intersection);
                         std::vector<cv::Vec4f> examined_lines = {first_line, second_line};
-                        // lsd->drawSegments(elem.first, examined_lines);
-                        // //cv::circle(display, intersection, 1, cv::Scalar(255, 0, 0), -1);
-
-                        // cv::imshow("examined lines", elem.first);
-                        // cv::waitKey(0);
                         std::vector<cv::Point> possible_detection = detect_dashed_border(first_line, second_line, intersection, edges_16bit);
 
                         if(!possible_detection.empty()){
