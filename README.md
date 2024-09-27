@@ -38,7 +38,7 @@ To run the program in detection mode command the following (example command is f
 `.\detector.exe -t=det input_dir output_dir`, where:
 
 - `t` is the mode flag. For the detection mode it should be set to `det`
-- `input_dir` is the path to the directory with the sample images and ground_truth JSON-files. If not overridden, defaults to `./img_dataset`
+- `input_dir` is the path to the directory with the sample images and ground truth JSON-files. If not overridden, defaults to `./img_dataset`
 - `output_dir` is the path to the directory where you would like to see images with detected barcodes and JSON-files with detection data. If not overridden, defaults to `./detections`
 
 ## Evaluation mode
@@ -57,7 +57,7 @@ To run the program in evaluation mode command the following (example command is 
 `.\detector.exe -t=val input_gt input_det`, where:
 
 - `t` is the mode flag. For the evaluation mode it should be set to `val`
-- `input_gt` is the path to the directory where the ground_truth JSON-files are stored. If not overridden, defaults to `./img_dataset`
+- `input_gt` is the path to the directory where the ground truth JSON-files are stored. If not overridden, defaults to `./img_dataset`
 - `input_det` is the path to the directory where the JSON-files with detection data are stored. If not overridden, defaults to `./detections`
 
 
